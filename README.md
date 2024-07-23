@@ -439,8 +439,6 @@ GET /localhost:3000/api/v1/tasks/2
 
 While you can make GET requests in your browser, it's often easier to see what's happening in Postman. 
 
-TODO: Will we have put or patch?
-
 Additionally, we're now going to build POST, PUT and DELETE endpoints and we need an additional tool such as Postman to make those types of requests.
 
 ## Adding New Tasks
