@@ -1,4 +1,4 @@
-# Task Manager 7
+# Task Manager API
 
 ## CRUD in Rails
 
