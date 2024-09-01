@@ -636,6 +636,7 @@ Congrats! You have finished your first Rails API that can handle full CRUD funct
 
 ## Checks for Understanding
 
+TESTING 123. TESTING AGAIN
 1. Define CRUD.
 1. Define MVC.
 1. What two files would you need to create/modify for a Rails application to respond to a GET request to /api/v1/tasks, assuming you have a Task model.
