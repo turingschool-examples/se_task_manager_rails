@@ -2,7 +2,7 @@
 
 ## CRUD in Rails
 
-What does CRUD (in the the programming world) stand for?
+What does CRUD (in the programming world) stand for?
 
 - C: Create
 - R: Read
@@ -19,21 +19,21 @@ Here is a high level image of the MVC design pattern. You will learn in this [In
 
 ![MVC](http://curriculum.turing.edu/assets/images/lessons/intro_to_mvc/mvc_rails.png)
 
-In this tutorial we're building an API. APIs are used to provide data to an external system when they request it, and the the APIs we'll see will mostly serve up data in the form of JSON. JSON is a popular data format that looks like a Ruby hash.
+In this tutorial we're building an API. APIs are used to provide data to an external system when they request it, and the APIs we'll see will mostly serve up data in the form of JSON. JSON is a popular data format that looks like a Ruby hash.
 
 Throughout the module, we'll talk through some conventions and best practices, but for now - we'd like for you to follow along with this tutorial. We highly recommend **not** copying and pasting the code in this tutorial. It's to your advantage to type each line of code on your own.
 
 ## Getting Configured
 
-Before creating our new Task Manager app, let's make sure we are all on the same version of Rails. For this tutorial, you will want to be running Rails 7.1.2. To check which version of rails you have installed, run `$ rails -v`. If you see any version other than 7.1.2, you will need to follow [these instructions](./rails_uninstall.md) to get the correct version installed.
+Before creating our new Task Manager app, let's make sure we are all on the same version of Rails. For this tutorial, you will want to be running Rails 7.1.3. To check which version of rails you have installed, run `$ rails -v`. If you see any version other than 7.1.3, you will need to follow [these instructions](./rails_uninstall.md) to get the correct version installed.
 
-After confirming that you are running the correct version of rails, we are ready to get started!
+After confirming that you are running the correct version of Rails, we are ready to get started!
 
-To create your rails app, navigate to your 2module directory and run the following command:
+To create your Rails app, navigate to your 2module directory and run the following command:
 
 `$ rails new task_manager -T -d="postgresql" --api`
 
-Let's break down this command to better understand what is happening. `rails new` is the command to create a new Rails app - this will create *a lot* of directories and files; we will explore this file structure in a moment. `task_manager` is going to be the name of the directory in which our Rails app lives and is, essentially, the name of our application. `-T` tells Rails that we are not going to use its default testing suite. We will be using RSpec as our testing framework. `-d="postgresql"` tells Rails that we will be using a postgresql database; Rails can handle many different databases, but this is the one we will be using in Mod 2. `--api` tells rails that we want to build an API instead of an application that also has a frontend.
+Let's break down this command to better understand what is happening. `rails new` is the command to create a new Rails app - this will create *a lot* of directories and files; we will explore this file structure in a moment. `task_manager` is going to be the name of the directory in which our Rails app lives and is, essentially, the name of our application. `-T` tells Rails that we are not going to use its default testing suite. We will be using RSpec as our testing framework. `-d="postgresql"` tells Rails that we will be using a Postgresql database; Rails can handle many different databases, but this is the one we will be using in Mod 2. `--api` tells rails that we want to build an API instead of an application that also has a frontend.
 
 Now that we have created our rails app, let's `cd task_manager` and explore some of the structure that Rails builds out for us.
 
@@ -41,10 +41,10 @@ Now that we have created our rails app, let's `cd task_manager` and explore so
 
 ![Rails File Structure](./images/rails_7_file_structure.png)
 
-Taking a look at the files that rails creates can be a bit overwhelming at first, but don't worry - this tutorial will only touch on a handful of directories! The top level directories that we are concered with are:
+Taking a look at the files that Rails creates can be a bit overwhelming at first, but don't worry - this tutorial will only touch on a handful of directories! The top level directories that we are concered with are:
 
 - *app* - This is where we configure Models and Controllers.
-- *config* - Inside this directory, in the routes.rb file is where we will tell our Rails app which HTTP requests to respond to.
+- *config* - Inside this directory, in the `routes.rb` file is where we will tell our Rails app which HTTP requests to respond to.
 - *db* - Where our database structure will be set up.
 
 In addition to these directories, we will also be dealing with our Gemfile, which is where we will tell Rails about any other gems we might need to run our app. For our task manager we will be adding just one gem to our Gemfile. Open your gemfile and add `pry` to the `:development, :test` group - your Gemfile should now look like this:
@@ -56,10 +56,7 @@ git_source(:github) { |repo| "http://github.com/#{repo}.git" }
 ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.2"
-
-# The original asset pipeline for Rails [http://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+gem "rails", "~> 7.1.3"
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
@@ -67,17 +64,8 @@ gem "pg", "~> 1.1"
 # Use the Puma web server [http://github.com/puma/puma]
 gem "puma", "~> 6.0"
 
-# Use JavaScript with ESM import maps [http://github.com/rails/importmap-rails]
-gem "importmap-rails"
-
-# Hotwire's SPA-like page accelerator [http://turbo.hotwired.dev]
-gem "turbo-rails"
-
-# Hotwire's modest JavaScript framework [http://stimulus.hotwired.dev]
-gem "stimulus-rails"
-
 # Build JSON APIs with ease [http://github.com/rails/jbuilder]
-gem "jbuilder"
+# gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
@@ -94,11 +82,11 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# Use Sass to process CSS
-# gem "sassc-rails"
-
 # Use Active Storage variants [http://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
+# gem "rack-cors"
 
 group :development, :test do
   # See http://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -128,7 +116,7 @@ Great - now we can use `binding.pry` anywhere in our app to debug as we go!
 
 ## Database Set-Up
 
-Before we can see what our new rails app can do, we need to do some more set up. First, let's create our app's database. Do this from the command line with:
+Before we can see what our new Rails app can do, we need to do some more set up. First, let's create our app's database. Do this from the command line with:
 
 ```bash
 $ rails db:create
@@ -154,13 +142,13 @@ Migrations allow you to evolve your database structure over time. Each migration
 To create a migration that will send instructions to create a tasks table to our database, run the following command from your terminal:
 
 ```bash
-$ rails generate migration CreateTask title:string description:string
+$ rails generate migration CreateTasks title:string description:string
 ```
 
-In this command, we are telling rails to generate a migration file that will create a tasks table in our database with two columns - title and description. To see the migration that rails created, open your `db/migrate` directory, and you should have a file in there that is called something like `db/migrate/20190414173402_create_task.rb`. Open that file and you will see the following:
+In this command, we are telling Rails to generate a migration file that will create a tasks table in our database with two columns - title and description. To see the migration that Rails created, open your `db/migrate` directory, and you should have a file in there that is called something like `db/migrate/20190414173402_create_tasks.rb`. Open that file and you will see the following:
 
 ```ruby
-class CreateTask < ActiveRecord::Migration[7.0]
+class CreateTasks < ActiveRecord::Migration[7.1]
   def change
     create_table :tasks do |t|
       t.string :title
@@ -181,10 +169,10 @@ $ rails db:migrate
 And you should see something like this:
 
 ```bash
-== 20221130062449 CreateTask: migrating =======================================
+== 20221130062449 CreateTasks: migrating =======================================
 -- create_table(:tasks)
    -> 0.0052s
-== 20221130062449 CreateTask: migrated (0.0053s) ==============================
+== 20221130062449 CreateTasks: migrated (0.0053s) ==============================
 ```
 
 Great! How can we verify that worked?
@@ -207,9 +195,12 @@ task_manager_development=# SELECT * FROM tasks;
 task_manager_development=#
 ```
 
+> Don't forget the semicolon.
+
 Awesome - we have a database with a table for tasks! In order to test your API, you'll want to add at least two tasks to your database. Review your SQL practice from intermission to learn how to add some tasks. 
 
-If you're still stuck, this is a great time to use ChatGPT to help you generate some data. Try asking something like 
+If you're still stuck, this is a great time to use ChatGPT to help you generate some data. Try asking something like: 
+
 ```
 How can I write SQL to insert data into this table?
 
@@ -228,7 +219,7 @@ You should see something like this:
 
 ```bash
 => Booting Puma
-=> Rails 7.1.2 application starting in development
+=> Rails 7.1.3 application starting in development
 => Run `bin/rails server --help` for more startup options
 Puma starting in single mode...
 * Puma version: 5.6.5 (ruby 3.2.2-p18) ("Birdie's Version")
@@ -266,11 +257,12 @@ Let's update our app to return something other than the default Rails welcome pa
 Here's our goal. When our browser makes a GET request to `localhost:3000/api/v1/tasks`, we want our API to return all of the tasks currently in the database. You'll notice that all of our endpoints start with the namespace `api` and the version `v1`. You will learn more about namespaces and versions later in this Mod.
 
 We want to see something like this:
+
 ![Get All Tasks](./images/get_all_tasks.png)
 
 Try navigating to `localhost:3000/api/v1/tasks` in your own browser. You should see an error telling you that `No route matches [GET] "/api/v1/tasks"`. Our app received a request that it was not set up to handle, so let's change that!
 
-First we need to update our `config/routes.rb` to handle a `GET '/api/v1/tasks'` request. Update your routes.rb file to include the following:
+First we need to update our `config/routes.rb` to handle a `GET '/api/v1/tasks'` request. Update your `routes.rb` file to include the following:
 
 **config/routes.rb**
 
@@ -337,7 +329,7 @@ Why inherit from `ApplicationRecord`? This Task class that we are creating is m
 
 ### Returning Tasks from the Database
 
-Update your tasks_controller to match the following. Rails will pull all of the Tasks from our database and then `render json:` will return that data as json.
+Update your tasks controller's `index` action to match the following. Rails will pull all of the Tasks from our database and then `render json:` will return that data as json.
 
 **app/controllers/api/v1/tasks_controller.rb**
 
@@ -355,7 +347,7 @@ Refresh your browser and you should now see when you make a request to http://lo
 
 The next endpoint we need to create is a `GET` request to http://localhost:3000/api/v1/tasks/:id, which should return the task with the ID specified. For example, a `GET` request to http://localhost:3000/api/v1/tasks/2` would return the task with id 2.
 
-If you make the request http://localhost:3000/api/v1/tasks/2 in your browser. You should see the error `No route matches [GET] "/api/v1/tasks/2"`. This is because we haven't added this route. Update your routes.rb file to include the following:
+If you make the request http://localhost:3000/api/v1/tasks/2 in your browser. You should see the error `No route matches [GET] "/api/v1/tasks/2"`. This is because we haven't added this route. Update your `routes.rb` file to include the following:
 
 **config/routes.rb**
 
@@ -371,7 +363,7 @@ Rails.application.routes.draw do
 end
 ```
 
-Now let's add that show route into our tasks_controller:
+Now let's add that show route into our tasks controller:
 
 **app/controllers/api/v1/tasks_controller.rb**
 
@@ -387,7 +379,7 @@ class Api::V1::TasksController < ApplicationController
 end
 ```
 
-Remember when we talked about how we are inheriting some functionality from ActiveRecord that helps us interact with our database? Well, now's a great place to take advantage of the ActiveRecord method find, which will retrieve a record from our database based on that record's id. In this case, we can use find like this:
+Remember when we talked about how we are inheriting some functionality from ActiveRecord that helps us interact with our database? Well, now's a great place to take advantage of the ActiveRecord method `find`, which will retrieve a record from our database based on that record's ID. In this case, we can use `find` like this:
 
 **app/controllers/api/v1/tasks_controller.rb**
 
@@ -399,7 +391,7 @@ end
 
 Navigate to https://localhost:3000/api/v1/tasks/1 and you should now see the json for that particular task!
 
-What is this `params` that we are passing into the find method? Let's throw a binding.pry at the top of our show action and see what we can find:
+What is this `params` that we are passing into the `find` method? Let's throw a `binding.pry` at the top of our `show` action and see what we can find:
 
 ```ruby
 def show
@@ -410,8 +402,8 @@ end
 
 Refresh your browser and take a look at your terminal. In your pry session, call params and see what is returned.
 
-```
- 13: def show
+```bash
+    13: def show
  => 14:   binding.pry
     15:   render json: Task.find(params[:id])
     16: end
@@ -420,7 +412,7 @@ Refresh your browser and take a look at your terminal. In your pry session, call
 => #<ActionController::Parameters {"controller"=>"tasks", "action"=>"show", "id"=>"2"} permitted: false>
 ```
 
-We are getting a params object that includes an :id that matches with the very end of the uri we visited (/api/v1/tasks/2). Looking at our routes, we see that we set up our URI pattern to accept :id, but when we visited this site, we typed in 2 which is an actual id that exists in our database. When we need to get some information, like an id, from our route in the form of parameters, we can include a symbol of the thing we are expecting when we set up our route - in this case, we are expecting an :id. So, based on how we set up our routes, we can manipulate and dictate what parameters we want; and what information we will need access to in our controllers.
+We are getting a `params` object that includes an `:id` key that matches with the very end of the uri we visited (/api/v1/tasks/2). Looking at our routes, we see that we set up our URI pattern to accept `:id`, but when we visited this site, we typed in `2` which is an actual ID that exists in our database. When we need to get some information, like an ID, from our route in the form of parameters, we can include a symbol of the thing we are expecting when we set up our route - in this case, we are expecting an `:id`. So, based on how we set up our routes, we can manipulate and dictate what parameters we want; and what information we will need access to in our controllers.
 
 Remember that you will need to exit your pry session to continue interacting with your site!
 
@@ -428,13 +420,15 @@ Remember that you will need to exit your pry session to continue interacting wit
 
 Open up [Postman](http://www.postman.com/downloads/) which you should have installed over intermission.
 
-In postman, make the same two requests you have been making in your browser.
+In Postman, make the same two requests you have been making in your browser.
 
 GET /localhost:3000/api/v1/tasks
+
 ![Postman Get All Tasks](./images/postman_get_all_tasks.png)
 
 
 GET /localhost:3000/api/v1/tasks/2
+
 ![Postman Get One Task](./images/postman_get_one_task.png)
 
 While you can make GET requests in your browser, it's often easier to see what's happening in Postman. 
@@ -443,13 +437,16 @@ Additionally, we're now going to build POST, PUT and DELETE endpoints and we nee
 
 ## Adding New Tasks
 
-Our goal is to support all of the CRUD operations in our API. We have successfully build out the Read portion, now it's time to build a route for Creating a new task.
+Our goal is to support all of the CRUD operations in our API. We have successfully built out the Read portion, now it's time to build a route for Creating a new task.
 
-Let's set up the request in Postman first. To create a new task, you're making a `POST` request to the `/api/v1/tasks` endpoint and passing in the data for that new task in your request body. Notice how we change the request type to `POST` in the top left and how we are now including a request body.
+Let's set up the request in Postman first. To create a new task, you're making a `POST` request to the `/api/v1/tasks` endpoint and pass in the data for that new task in your request body. Notice how we change the request type to `POST` in the top left and how we are now including a request body.
 
 ![Postman Post](./images/postman_post.png)
 
-To build out this endpoint, we will follow the same steps as we have been. 1. Add the route. 2. Update the controller.
+To build out this endpoint, we will follow the same steps as we have been:
+
+1. Add the route.
+2. Update the controller.
 
 **config/routes.rb**
 
@@ -492,7 +489,7 @@ class Api::V1::TasksController < ApplicationController
 end
 ```
 
-Now that we have our create endpoint set up, let's put a binding.pry in our tasks controller's create action so that it looks like this:
+Now that we have our create endpoint set up, let's put a `binding.pry` in our tasks controller's `create` action so that it looks like this:
 
 **app/controllers/api/v1/tasks_controller.rb**
 
@@ -502,9 +499,10 @@ def create
   render json: Task.create(task_params)
 end
 ```
+
 Make a POST request to http://localhost:3000/api/v1/tasks in Postman. In our terminal, we should have hit our pry - let's make sure we have access to the information we need to create a new task:
 
-```
+```bash
 From: /Users/zoepeterson/turing/task_manager/app/controllers/api/v1/tasks_controller.rb:12 Api::V1::TasksController#create:
 
     11: def create
@@ -515,6 +513,7 @@ From: /Users/zoepeterson/turing/task_manager/app/controllers/api/v1/tasks_contro
 [1] pry(#<Api::V1::TasksController>)> params
 => #<ActionController::Parameters {"title"=>"Feed the cats", "description"=>"Two scoops in the morning.", "controller"=>"api/v1/tasks", "action"=>"create", "task"=>{"title"=>"Feed the cats", "description"=>"Two scoops in the morning."}} permitted: false>
 ```
+
 Looks good! We have access to the parameters we need. Notice that we have also added the following private method.
 
 ```ruby
@@ -533,7 +532,7 @@ You will learn more about strong params later in this Mod.
 
 ## Editing a Task
 
-At this point, we have an API that will allow us to fetch a list of tasks, fetch a specific task, and add a task. We have covered the Create and Read portions of CRUD. Now, let's add some functionality to be able to Update existing tasks.
+At this point, we have an API that will allow us to fetch a list of tasks, fetch a specific task, and add a task. We have covered the Create and Read portions of CRUD. Now, let's add some functionality to be able to update existing tasks.
 
 We want to support a PATCH request to `/api/v1/tasks/:id` where the user sends the fields to update in the request body.
 
@@ -550,13 +549,14 @@ patch '/api/v1/tasks/:id', to: "api/v1/tasks#update"
 And in our tasks controller, add the following action:
 
 **app/controllers/api/v1/tasks_controller.rb**
+
 ```ruby
 def update
   render json: Task.update(params[:id], task_params)
 end
 ```
 
-We're making use of the same task_params method as before for validation. And we're making use of the ActiveRecord's `update` method to update the object that corresponds with the id provided in the path.
+We're making use of the same `task_params` method as before for validation. And we're making use of the ActiveRecord's `update` method to update the object that corresponds with the ID provided in the path.
 
 Now that we have this edit functionality implemented, make sure you have your server running, and play around with sending requests in Postman to update tasks.
 
@@ -569,6 +569,7 @@ As of now, we have the Create, Read, and Update functions done - all we are miss
 Let's go add that route to our `config/routes.rb`:
 
 **config/routes.rb**
+
 ```ruby
 delete '/api/v1/tasks/:id', to: "api/v1/tasks#destroy"
 ```
@@ -581,7 +582,7 @@ def destroy
 end
 ```
 
-Another new method! We have used find, create, and update so far - what is delete doing? delete is another method we are inheriting from ActiveRecord that deletes records in our database based on an id that you send to the method.
+Another new method! We have used `find`, `create`, and `update` so far - what is `delete` doing? `delete` is another method we are inheriting from ActiveRecord that deletes records in our database based on an ID that you send to the method.
 
 Now, we should be able to send a `DELETE` request to http://localhost:3000/api/v1/tasks/:id and delete the task for the provided id!
 
@@ -628,6 +629,7 @@ def index
   render json: TaskSerializer.format_tasks(tasks)
 end
 ```
+
 Make a GET request to retrieve all tasks again and we should see the new formatting! If you are curious to learn more about serializers, look ahead to the serializers lesson and do a little research.
 
 ## Finished!
